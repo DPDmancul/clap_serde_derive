@@ -13,6 +13,7 @@ repository = "https://gitlab.com/DPDmancul/clap_serde_derive"
 license = "GPL-3.0-or-later"
 keywords = ["cli", "argument", "config", "parser"]
 categories = ["command-line-interface", "config", "encoding"]
+exclude = [".gitlab-ci.yml", "check_diff_ver.sh"]
 
 [dependencies]
 clap_serde_proc = { path = "./clap_serde_proc", version = "0.1" }
