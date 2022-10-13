@@ -1,6 +1,9 @@
+#![doc(html_favicon_url = "https://gitlab.com/DPDmancul/clap-serde-derive/-/raw/main/asstets/logo.svg")]
+#![doc(html_logo_url = "https://gitlab.com/DPDmancul/clap-serde-derive/-/raw/main/assets/logo.svg")]
 #![doc = include_str!("../README.md")]
+#![no_std]
 
-use std::borrow::BorrowMut;
+use core::borrow::BorrowMut;
 
 // Re-exports
 pub use clap;

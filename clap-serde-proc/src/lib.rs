@@ -50,7 +50,7 @@ pub fn clap_serde(_attr: TokenStream, item: TokenStream) -> TokenStream {
                         .is_ident(&format_ident!("default"))
                         .then_some(attr.tokens.clone())
                 })
-                .unwrap_or_else(|| parse_quote!(<#ty as std::default::Default>::default()))
+                .unwrap_or_else(|| parse_quote!(<#ty as core::default::Default>::default()))
         })
         .collect();
 
@@ -114,22 +114,22 @@ pub fn clap_serde(_attr: TokenStream, item: TokenStream) -> TokenStream {
         {
             type Opt = #opt_name;
 
-            fn update(&mut self, mut other: impl std::borrow::BorrowMut<Self::Opt>) {
+            fn update(&mut self, mut other: impl core::borrow::BorrowMut<Self::Opt>) {
                 let other = other.borrow_mut();
                 #(
-                    if let std::option::Option::Some(v) = other.#not_recursive_fields.take() {
+                    if let core::option::Option::Some(v) = other.#not_recursive_fields.take() {
                         self.#not_recursive_fields = v;
                     }
                 )*
                 #(
-                    if let std::option::Option::Some(mut v) = other.#recursive_fields.take() {
+                    if let core::option::Option::Some(mut v) = other.#recursive_fields.take() {
                         self.#recursive_fields.update(&mut v);
                     }
                 )*
             }
         }
 
-        impl #impl_generics std::default::Default for #name #ty_generics #where_clause {
+        impl #impl_generics core::default::Default for #name #ty_generics #where_clause {
             #[doc = #default_doc]
             fn default() -> Self {
                 Self {
@@ -140,7 +140,7 @@ pub fn clap_serde(_attr: TokenStream, item: TokenStream) -> TokenStream {
             }
         }
 
-        impl #impl_generics std::convert::From<<Self as clap_serde_derive::ClapSerde>::Opt>
+        impl #impl_generics core::convert::From<<Self as clap_serde_derive::ClapSerde>::Opt>
             for #name #ty_generics #where_clause
         {
             /// Create new object from Opt.
@@ -148,7 +148,7 @@ pub fn clap_serde(_attr: TokenStream, item: TokenStream) -> TokenStream {
                 Self::default().merge(data)
             }
         }
-        impl #impl_generics std::convert::From<&mut <Self as clap_serde_derive::ClapSerde>::Opt>
+        impl #impl_generics core::convert::From<&mut <Self as clap_serde_derive::ClapSerde>::Opt>
             for #name #ty_generics #where_clause
         {
             /// Create new object from &mut Opt.
