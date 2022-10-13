@@ -17,7 +17,7 @@ publish:
     - |
       if ./check_diff_ver.sh clap_serde_proc/Cargo.toml
       then
-        cargo publish -p clap_serde_proc
+        cargo publish -p clap-serde-proc
       fi
     - |
       if ./check_diff_ver.sh Cargo.toml
