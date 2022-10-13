@@ -1,10 +1,10 @@
 [package]
-name = "clap_serde_proc"
-description = "Procedural macro for clap_serde_derive"
-version = "0.1.0"
+name = "clap-serde-proc"
+description = "Procedural macro for clap-serde-derive"
+version = "1.0.0"
 edition = "2021"
 authors = ["Davide Peressoni"]
-repository = "https://gitlab.com/DPDmancul/clap_serde_derive/clap_serde_proc"
+repository = "https://gitlab.com/DPDmancul/clap-serde-derive/clap_serde_proc"
 license = "GPL-3.0-or-later"
 
 [lib]

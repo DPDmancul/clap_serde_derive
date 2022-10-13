@@ -33,13 +33,10 @@ pub fn clap_serde(_attr: TokenStream, item: TokenStream) -> TokenStream {
     let name = ast.ident;
     // name for private module with struct with Options
     let opt_name = format_ident!("ClapSerdeOptional{}", name);
+    let default_doc = format!("Create default {}", name);
 
     let generics = ast.generics;
     let (impl_generics, ty_generics, where_clause) = generics.split_for_impl();
-    // Add lifetime _a
-    let mut generics_a = generics.clone();
-    generics_a.params.push(parse_quote!('_a));
-    let (impl_generics_a, _, _) = generics_a.split_for_impl();
 
     let field_names: Vec<syn::Ident> = fields.iter().map(|f| f.ident.clone().unwrap()).collect();
     let default_values: Vec<proc_macro2::TokenStream> = fields
@@ -53,7 +50,7 @@ pub fn clap_serde(_attr: TokenStream, item: TokenStream) -> TokenStream {
                         .is_ident(&format_ident!("default"))
                         .then_some(attr.tokens.clone())
                 })
-                .unwrap_or_else(|| parse_quote!(<#ty as Default>::default()))
+                .unwrap_or_else(|| parse_quote!(<#ty as std::default::Default>::default()))
         })
         .collect();
 
@@ -83,7 +80,7 @@ pub fn clap_serde(_attr: TokenStream, item: TokenStream) -> TokenStream {
                 not_recursive = false;
                 recursive_fields.push(f.ident.clone());
                 let ty = &f.ty;
-                f.ty = parse_quote!(<#ty as clap_serde_derive::ClapSerde<'static>>::Opts);
+                f.ty = parse_quote!(<#ty as clap_serde_derive::ClapSerde>::Opt);
                 false
             } else {
                 true
@@ -105,37 +102,58 @@ pub fn clap_serde(_attr: TokenStream, item: TokenStream) -> TokenStream {
         }
 
         // the struct with options
-        // TODO hide
+        #[doc(hidden)]
         #[derive(clap::Parser, serde::Deserialize)]
         #(#attrs)*
-        #vis struct #opt_name #generics {
+        pub struct #opt_name #generics {
             #fields_opt
         }
 
-        impl #impl_generics_a clap_serde_derive::ClapSerde<'_a> for #name #ty_generics #where_clause {
-            type Opts = #opt_name;
+        impl #impl_generics clap_serde_derive::ClapSerde for #name #ty_generics
+            #where_clause
+        {
+            type Opt = #opt_name;
 
-            fn update(&mut self, other: &mut Self::Opts) {
+            fn update(&mut self, mut other: impl std::borrow::BorrowMut<Self::Opt>) {
+                let other = other.borrow_mut();
                 #(
-                    if let Some(v) = other.#not_recursive_fields.take() {
+                    if let std::option::Option::Some(v) = other.#not_recursive_fields.take() {
                         self.#not_recursive_fields = v;
                     }
                 )*
                 #(
-                    if let Some(mut v) = other.#recursive_fields.take() {
+                    if let std::option::Option::Some(mut v) = other.#recursive_fields.take() {
                         self.#recursive_fields.update(&mut v);
                     }
                 )*
             }
         }
 
-        impl #impl_generics Default for #name #ty_generics #where_clause {
+        impl #impl_generics std::default::Default for #name #ty_generics #where_clause {
+            #[doc = #default_doc]
             fn default() -> Self {
                 Self {
                     #(
                         #field_names: #default_values,
                     )*
                 }
+            }
+        }
+
+        impl #impl_generics std::convert::From<<Self as clap_serde_derive::ClapSerde>::Opt>
+            for #name #ty_generics #where_clause
+        {
+            /// Create new object from Opt.
+            fn from(data: <Self as clap_serde_derive::ClapSerde>::Opt) -> Self {
+                Self::default().merge(data)
+            }
+        }
+        impl #impl_generics std::convert::From<&mut <Self as clap_serde_derive::ClapSerde>::Opt>
+            for #name #ty_generics #where_clause
+        {
+            /// Create new object from &mut Opt.
+            fn from(data: &mut <Self as clap_serde_derive::ClapSerde>::Opt) -> Self {
+                Self::default().merge(data)
             }
         }
     }

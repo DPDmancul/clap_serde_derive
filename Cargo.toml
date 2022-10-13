@@ -1,22 +1,22 @@
 [workspace]
 members = [
-  "clap_serde_proc",
+  "clap-serde-proc",
 ]
 
 [package]
 name = "clap-serde-derive"
 description = "Merge results from clap and serde into struct with derive"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2021"
 authors = ["Davide Peressoni"]
-repository = "https://gitlab.com/DPDmancul/clap_serde_derive"
+repository = "https://gitlab.com/DPDmancul/clap-serde-derive"
 license = "GPL-3.0-or-later"
 keywords = ["cli", "argument", "config", "parser"]
 categories = ["command-line-interface", "config", "encoding"]
 exclude = [".gitlab-ci.yml", "check_diff_ver.sh"]
 
 [dependencies]
-clap_serde_proc = { path = "./clap_serde_proc", version = "0.1" }
+clap-serde-proc = { path = "./clap-serde-proc", version = "1.0" }
 clap = { version = "4.0.11", features = ["derive"] }
 serde = { version = "1.0.145", features = ["derive"] }
 
