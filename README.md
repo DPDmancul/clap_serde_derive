@@ -6,9 +6,9 @@
 [![License](https://img.shields.io/gitlab/license/DPDmancul/clap-serde-derive?color=brightgreen&style=flat-square&logo=gnu)](https://gitlab.com/DPDmancul/clap-serde-derive/-/blob/main/LICENSE.md)
 [![GitLab pipeline](https://img.shields.io/gitlab/pipeline/DPDmancul/clap-serde-derive/main?label=tests&style=flat-square&logo=gitlab)](https://gitlab.com/DPDmancul/clap-serde-derive/builds)
 
-<center>
+<div align="center">
     <img alt="" src="https://gitlab.com/DPDmancul/clap-serde-derive/-/raw/main/assets/logo.svg" />
-</center>
+</div>
 
 With the [`clap_serde`] procedural macro both clap and serde can be derived from a struct.  
 Then the struct can be parsed from clap and serde sources as in a layered config: the last
