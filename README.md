@@ -43,29 +43,29 @@ use clap_serde_derive::{
 
 #[derive(ClapSerde, Serialize)]
 #[derive(Debug)]
-#[clap(author, version, about)]
+#[command(author, version, about)]
 pub struct Args {
     /// Input files
     pub input: Vec<std::path::PathBuf>,
 
     /// String argument
-    #[clap(short, long)]
+    #[arg(short, long)]
     name: String,
 
     /// Skip serde deserialize
     #[default(13)]
     #[serde(skip_deserializing)]
-    #[clap(long = "num")]
+    #[arg(long = "num")]
     pub clap_num: u32,
 
     /// Skip clap
     #[serde(rename = "number")]
-    #[clap(skip)]
+    #[arg(skip)]
     pub serde_num: u32,
 
     /// Recursive fields
     #[clap_serde]
-    #[clap(flatten)]
+    #[command(flatten)]
     pub suboptions: SubConfig,
 }
 
@@ -73,7 +73,7 @@ pub struct Args {
 #[derive(Debug)]
 pub struct SubConfig {
     #[default(true)]
-    #[clap(long = "no-flag", action = ArgAction::SetFalse)]
+    #[arg(long = "no-flag", action = ArgAction::SetFalse)]
     pub flag: bool,
 }
 
@@ -103,24 +103,24 @@ use clap_serde_derive::{
 };
 
 #[derive(Parser)]
-#[clap(author, version, about)]
+#[command(author, version, about)]
 struct Args {
     /// Input files
     input: Vec<std::path::PathBuf>,
 
     /// Config file
-    #[clap(short, long = "config", default_value = "config.yml")]
+    #[arg(short, long = "config", default_value = "config.yml")]
     config_path: std::path::PathBuf,
 
     /// Rest of arguments
-    #[clap(flatten)]
+    #[command(flatten)]
     pub config: <Config as ClapSerde>::Opt,
 }
 
 #[derive(ClapSerde)]
 struct Config {
     /// String argument
-    #[clap(short, long)]
+    #[arg(short, long)]
     name: String,
 }
 

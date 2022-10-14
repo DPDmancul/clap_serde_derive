@@ -4,7 +4,7 @@ description = "Procedural macro for clap-serde-derive"
 version = "0.2.0"
 edition = "2021"
 authors = ["Davide Peressoni"]
-repository = "https://gitlab.com/DPDmancul/clap-serde-derive/clap-serde-proc"
+repository = "https://gitlab.com/DPDmancul/clap-serde-derive"
 license = "AGPL-3.0-or-later"
 
 [lib]
