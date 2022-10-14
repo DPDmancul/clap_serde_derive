@@ -1,4 +1,21 @@
-#![doc(html_favicon_url = "https://gitlab.com/DPDmancul/clap-serde-derive/-/raw/main/asstets/logo.svg")]
+// Copyright (C) 2022 Davide Peressoni
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#![doc(
+    html_favicon_url = "https://gitlab.com/DPDmancul/clap-serde-derive/-/raw/main/asstets/logo.svg"
+)]
 #![doc(html_logo_url = "https://gitlab.com/DPDmancul/clap-serde-derive/-/raw/main/assets/logo.svg")]
 #![doc = include_str!("../README.md")]
 #![no_std]
@@ -7,16 +24,15 @@ use core::borrow::BorrowMut;
 
 // Re-exports
 pub use clap;
-pub use clap_serde_proc::clap_serde;
+pub use clap_serde_proc::ClapSerde;
 pub use serde;
 
 /// Trait representing a struct which can be parsed from clap and serde.
-/// This trait is automatically implemented by [`clap_serde`] procedural macro.
-pub trait ClapSerde:
-    Default + serde::Serialize + From<Self::Opt> + for<'a> From<&'a mut Self::Opt>
-{
+/// This trait is automatically implemented by [`ClapSerde`][clap_serde_proc::ClapSerde]
+/// derive macro.
+pub trait ClapSerde: Default + From<Self::Opt> + for<'a> From<&'a mut Self::Opt> {
     /// The same struct of the parent but with optional fields.
-    type Opt: clap::Parser + serde::de::DeserializeOwned;
+    type Opt: Default + clap::Parser + serde::de::DeserializeOwned;
 
     /// Merge in place from Opt struct.
     ///

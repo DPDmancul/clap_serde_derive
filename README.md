@@ -10,7 +10,7 @@
     <img alt="" src="https://gitlab.com/DPDmancul/clap-serde-derive/-/raw/main/assets/logo.svg" />
 </div>
 
-With the [`clap_serde`] procedural macro both clap and serde can be derived from a struct.  
+With the `ClapSerde` procedural macro both clap and serde can be derived from a struct.  
 Then the struct can be parsed from clap and serde sources as in a layered config: the last
 source has the precedence.
 
@@ -37,10 +37,11 @@ no source contained the field.
 ```rust
 use clap_serde_derive::{
     clap::{self, ArgAction},
-    clap_serde, ClapSerde,
+    serde::Serialize,
+    ClapSerde,
 };
 
-#[clap_serde]
+#[derive(ClapSerde, Serialize)]
 #[derive(Debug)]
 #[clap(author, version, about)]
 pub struct Args {
@@ -68,7 +69,7 @@ pub struct Args {
     pub suboptions: SubConfig,
 }
 
-#[clap_serde]
+#[derive(ClapSerde, Serialize)]
 #[derive(Debug)]
 pub struct SubConfig {
     #[default(true)]
@@ -97,8 +98,8 @@ You can easily take the config file path from command line in this way.
 use std::{fs::File, io::BufReader};
 
 use clap_serde_derive::{
-    clap::{self, ArgAction, Parser},
-    clap_serde, ClapSerde,
+    clap::{self, Parser},
+    ClapSerde,
 };
 
 #[derive(Parser)]
@@ -116,7 +117,7 @@ struct Args {
     pub config: <Config as ClapSerde>::Opt,
 }
 
-#[clap_serde]
+#[derive(ClapSerde)]
 struct Config {
     /// String argument
     #[clap(short, long)]

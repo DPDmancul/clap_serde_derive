@@ -1,5 +1,6 @@
 stages:
   - test
+  - publish-proc
   - publish
 
 image: rust:latest
@@ -10,15 +11,22 @@ test:
     - cargo build
     - cargo test
 
+publish-proc:
+  stage: publish-proc
+  script:
+    - chmod +x check_diff_ver.sh
+    - |
+      if ./check_diff_ver.sh clap-serde-proc/Cargo.toml
+      then
+        cargo publish -p clap-serde-proc
+      fi
+  only:
+    refs: [tags]
+
 publish:
   stage: publish
   script:
     - chmod +x check_diff_ver.sh
-    - |
-      if ./check_diff_ver.sh clap_serde_proc/Cargo.toml
-      then
-        cargo publish -p clap-serde-proc
-      fi
     - |
       if ./check_diff_ver.sh Cargo.toml
       then
