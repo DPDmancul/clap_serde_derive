@@ -32,7 +32,7 @@ pub use serde;
 /// derive macro.
 pub trait ClapSerde: Default + From<Self::Opt> + for<'a> From<&'a mut Self::Opt> {
     /// The same struct of the parent but with optional fields.
-    type Opt: Default + clap::Parser + serde::de::DeserializeOwned;
+    type Opt: Default + clap::Parser + serde::de::DeserializeOwned + clap::Args;
 
     /// Merge in place from Opt struct.
     ///
