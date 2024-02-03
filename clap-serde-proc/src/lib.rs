@@ -99,6 +99,18 @@ pub fn clap_serde(item: TokenStream) -> TokenStream {
                 not_recursive_fields.push(f.ident.clone());
             }
 
+            if f.ty == parse_quote!(bool) {
+                f.attrs.push(parse_quote! {
+                    #[clap(
+                        action = clap::ArgAction::SetTrue,
+                        value_parser = clap::builder::TypedValueParser::map(
+                            clap::builder::BoolValueParser::new(),
+                            |x| x.then_some(true)
+                        )
+                    )]
+                });
+            }
+
             // Wrap field type in option
             let ty = &f.ty; // Use possible updated type
             f.ty = parse_quote!(Option<#ty>);
