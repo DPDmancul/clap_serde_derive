@@ -18,10 +18,9 @@
 )]
 #![doc(html_logo_url = "https://gitlab.com/DPDmancul/clap-serde-derive/-/raw/main/assets/logo.svg")]
 #![doc = include_str!("../README.md")]
-#![no_std]
 
 use core::borrow::BorrowMut;
-
+use std::ffi::OsString;
 // Re-exports
 pub use clap;
 pub use clap_serde_proc::ClapSerde;
@@ -50,8 +49,27 @@ pub trait ClapSerde: Default + From<Self::Opt> + for<'a> From<&'a mut Self::Opt>
     fn merge_clap(self) -> Self {
         self.merge(<Self::Opt as clap::Parser>::parse())
     }
+
+    /// Merge from clap to the object with the given args
+    fn merge_clap_with_args<I, T>(self, itr: I) -> Self
+    where
+        I: IntoIterator<Item = T>,
+        T: Into<OsString> + Clone,
+    {
+        self.merge(<Self::Opt as clap::Parser>::parse_from(itr))
+    }
+
     /// Create new object parsing from clap.
     fn from_clap() -> Self {
         Self::default().merge_clap()
+    }
+
+    /// Create new object parsing from clap with the given args
+    fn from_clap_with_args<I, T>(itr: I) -> Self
+    where
+        I: IntoIterator<Item = T>,
+        T: Into<OsString> + Clone,
+    {
+        Self::default().merge_clap_with_args(itr)
     }
 }

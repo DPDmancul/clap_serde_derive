@@ -76,7 +76,7 @@ pub fn clap_serde(item: TokenStream) -> TokenStream {
             // If no default value was provided use the default for the type
             let mut def_val = parse_quote!(<#ty as core::default::Default>::default());
             // Is this field recursive? (Does it implement ClapSerde?)
-            let mut not_recursive = true;
+            let mut recursive = false;
 
             f.attrs.retain(|attr| {
                 if attr.path.is_ident(&format_ident!("default")) {
@@ -85,7 +85,7 @@ pub fn clap_serde(item: TokenStream) -> TokenStream {
                     false
                 } else if attr.path.is_ident(&format_ident!("clap_serde")) {
                     // Found declaration of recursive field
-                    not_recursive = false;
+                    recursive = true;
                     recursive_fields.push(f.ident.clone());
                     f.ty = parse_quote!(<#ty as clap_serde_derive::ClapSerde>::Opt);
                     false
@@ -95,13 +95,19 @@ pub fn clap_serde(item: TokenStream) -> TokenStream {
                 }
             });
 
-            if not_recursive {
-                not_recursive_fields.push(f.ident.clone());
-            }
+            if recursive {
+                // serde needs to default this.  It's not Option due to issues with clap_derive
+                // and optional nested subcommands.  This will allow serde parsing to continue
+                // with missing fields the same way it would have with the Option fields.
+                f.attrs.push(parse_quote!(#[serde(default)]));
 
-            // Wrap field type in option
-            let ty = &f.ty; // Use possible updated type
-            f.ty = parse_quote!(Option<#ty>);
+            } else {
+                not_recursive_fields.push(f.ident.clone());
+
+                // Wrap field type in option
+                let ty = &f.ty; // Use possible updated type
+                f.ty = parse_quote!(Option<#ty>);
+            }
 
             def_val
         })
@@ -110,7 +116,7 @@ pub fn clap_serde(item: TokenStream) -> TokenStream {
     quote! {
         // the struct with options
         #[doc(hidden)]
-        #[derive(clap::Parser, serde::Deserialize, core::default::Default)]
+        #[derive(clap_serde_derive::clap::Parser, serde::Deserialize, core::default::Default)]
         #ast
 
         // implement ClapSerde
@@ -127,9 +133,7 @@ pub fn clap_serde(item: TokenStream) -> TokenStream {
                     }
                 )*
                 #(
-                    if let core::option::Option::Some(mut v) = other.#recursive_fields.take() {
-                        self.#recursive_fields.update(&mut v);
-                    }
+                    self.#recursive_fields.update(&mut other.#recursive_fields);
                 )*
             }
         }

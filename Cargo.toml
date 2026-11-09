@@ -6,8 +6,8 @@ members = [
 [package]
 name = "clap-serde-derive"
 description = "Merge results from clap and serde into struct with derive"
-version = "0.2.1"
-edition = "2021"
+version = "0.3.0"
+edition = "2024"
 authors = ["Davide Peressoni"]
 repository = "https://gitlab.com/DPDmancul/clap-serde-derive"
 license = "AGPL-3.0-or-later"
@@ -16,9 +16,9 @@ categories = ["command-line-interface", "config", "encoding"]
 exclude = [".gitlab-ci.yml", "check_diff_ver.sh", "clap-serde-proc", "assets"]
 
 [dependencies]
-clap-serde-proc = { path = "./clap-serde-proc", version = "0.2" }
-clap = { version = "4.0.11", features = ["derive"] }
-serde = { version = "1.0.145", features = ["derive"] }
+clap-serde-proc = { path = "./clap-serde-proc", version = "0.3" }
+clap = { version = "4.6.7", features = ["derive"] }
+serde = { version = "1.0.229", features = ["derive"] }
 
 [dev-dependencies]
 serde_yaml = "0.9.13"
