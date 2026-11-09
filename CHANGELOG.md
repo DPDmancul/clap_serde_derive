@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.0.0 - 2026-11-09
+### Added
+- `merge_clap_with_args` and `methods`
+### Changed
+- Flattened commands are no more optional, so that nested optional subcommands work 
+### Removed
+- `no_std` support
+
 ## 0.2.1 - 2023-10-19
 ### Added
 - `clap::Args` to Opt
