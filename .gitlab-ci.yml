@@ -19,6 +19,8 @@ publish:
         sed -i 's/\[package\]/\0\nversion = "'"$VERSION"'"/' "$f"
       done
     - sed -i 's/^\(clap-serde-proc\).*$/\1 = "'"$VERSION"'"/' Cargo.toml
+    - git add Cargo.toml clap-serde-proc/Cargo.toml
+    - git commit -m 'set version'
     - cargo publish -p clap-serde-proc
     - cargo publish
   only:
