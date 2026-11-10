@@ -6,7 +6,6 @@ members = [
 [package]
 name = "clap-serde-derive"
 description = "Merge results from clap and serde into struct with derive"
-version = "1.0.0"
 edition = "2024"
 authors = ["Davide Peressoni"]
 repository = "https://gitlab.com/DPDmancul/clap-serde-derive"
