@@ -7,19 +7,19 @@ image: rust:latest
 test:
   stage: test
   script:
-    - cargo build
     - cargo test
 
 publish:
   stage: publish
   script:
+    - export VERSION="${CI_COMMIT_TAG#v}"
     - |
       for f in Cargo.toml clap-serde-proc/Cargo.toml
       do
-        sed -i 's/\[package\]/\0\nversion = "'"${CI_COMMIT_TAG#v}"'"/' "$f"
+        sed -i 's/\[package\]/\0\nversion = "'"$VERSION"'"/' "$f"
       done
+    - sed -i 's/^(clap-serde-proc).*$/\1 = '"$VERSION"'/' Cargo.toml
     - cargo publish -p clap-serde-proc
-    - sleep 30 # await cargo index to update
     - cargo publish
   only:
     refs: [tags]

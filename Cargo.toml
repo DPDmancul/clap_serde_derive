@@ -15,7 +15,7 @@ categories = ["command-line-interface", "config", "encoding"]
 exclude = [".gitlab-ci.yml", "check_diff_ver.sh", "clap-serde-proc", "assets"]
 
 [dependencies]
-clap-serde-proc = { path = "./clap-serde-proc", version = "0.3" }
+clap-serde-proc.path = "./clap-serde-proc"
 clap = { version = "4.6.7", features = ["derive"] }
 serde = { version = "1.0.229", features = ["derive"] }
 
