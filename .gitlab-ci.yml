@@ -18,7 +18,7 @@ publish:
       do
         sed -i 's/\[package\]/\0\nversion = "'"$VERSION"'"/' "$f"
       done
-    - sed -i 's/^\(clap-serde-proc\).*$/\1 = '"$VERSION"'/' Cargo.toml
+    - sed -i 's/^\(clap-serde-proc\).*$/\1 = "'"$VERSION"'"/' Cargo.toml
     - cargo publish -p clap-serde-proc
     - cargo publish
   only:
