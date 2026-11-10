@@ -20,7 +20,7 @@ publish:
       done
     - sed -i 's/^\(clap-serde-proc\).*$/\1 = "'"$VERSION"'"/' Cargo.toml
     - git add Cargo.toml clap-serde-proc/Cargo.toml
-    - git commit -m 'set version'
+    - git -c user.name='Gitlab CI' -c user.email='<>' commit -m 'set version'
     - cargo publish -p clap-serde-proc
     - cargo publish
   only:
